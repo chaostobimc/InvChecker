@@ -75,7 +75,7 @@
   "net": {
     "_info": "TCP-Server fuer die Mod. host 127.0.0.1 = nur dieser Rechner (Bot + Minecraft auf einem PC). 0.0.0.0 = auch aus dem LAN/Internet erreichbar, dann token MUSS geaendert werden. token MUSS immer mit der Mod uebereinstimmen.",
     "host": "127.0.0.1",
-    "port": 8765,
+    "port": 8766,
     "token": "invchecker-change-me",
     "maxConnections": 8,
     "logTraffic": false

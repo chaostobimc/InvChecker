@@ -118,7 +118,7 @@ eintragen, fertig.
 
 ### Variante C: Portforwarding (nur wenn es sein muss)
 
-Router: TCP `8765` → Pi. Dazu **zwingend** ein langes zufälliges Token:
+Router: TCP `8766` → Pi. Dazu **zwingend** ein langes zufälliges Token:
 
 ```bash
 openssl rand -hex 16
@@ -131,8 +131,8 @@ haben keine öffentliche IPv4 mehr (CGNAT) – dann geht nur A oder B.
 ### Variante D: ngrok (geht, aber mit drei Haken)
 
 ```bash
-ngrok tcp 8765
-# Ausgabe: Forwarding  tcp://1.tcp.ngrok.io:12345 -> localhost:8765
+ngrok tcp 8766
+# Ausgabe: Forwarding  tcp://1.tcp.ngrok.io:12345 -> localhost:8766
 ```
 
 In den Mod-Einstellungen `botHost = 1.tcp.ngrok.io` und `botPort = 12345`

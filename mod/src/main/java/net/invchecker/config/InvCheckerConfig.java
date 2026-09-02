@@ -31,7 +31,7 @@ public final class InvCheckerConfig {
 
 	// ------------------------------------------------------------------ Bot-Verbindung
 	public String botHost = "127.0.0.1";
-	public int botPort = 8765;
+	public int botPort = 8766;
 	public String token = "invchecker-change-me";
 	/** Millisekunden zwischen zwei Verbindungsversuchen. */
 	public int reconnectDelayMs = 1500;

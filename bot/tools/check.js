@@ -6,9 +6,9 @@
  * Kommandozeile. Praktisch um zu prüfen, ob Bot + Server + invsee funktionieren,
  * BEVOR man Minecraft startet.
  *
- *   node tools/check.js                     -> Trigger "Testspieler" an localhost:8765
+ *   node tools/check.js                     -> Trigger "Testspieler" an localhost:8766
  *   node tools/check.js Greatcat14          -> Trigger für Greatcat14
- *   node tools/check.js --host 192.168.1.50 --port 8765 --token geheim Greatcat14
+ *   node tools/check.js --host 192.168.1.50 --port 8766 --token geheim Greatcat14
  */
 
 const net = require('node:net')
@@ -23,7 +23,7 @@ const get = (flag, fallback) => {
 }
 
 const host = get('--host', '127.0.0.1')
-const port = Number(get('--port', '8765'))
+const port = Number(get('--port', '8766'))
 const token = get('--token', 'invchecker-change-me')
 const target = args.find((a) => !a.startsWith('--')) || 'Testspieler'
 

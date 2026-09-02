@@ -45,7 +45,7 @@ Wege offen. Weil der Port dann im LAN offen ist, gehört das Standard-Token
 geändert – der Bot warnt beim Start selbst: `Token: STANDARDWERT – bitte ändern!`.
 
 Out of the box passen die Defaults übrigens schon zusammen: Mod `botHost =
-127.0.0.1`, `botPort = 8765`, Token `invchecker-change-me` – genau die Werte aus
+127.0.0.1`, `botPort = 8766`, Token `invchecker-change-me` – genau die Werte aus
 `config.json`. Für Aufbau 1 musst du also nur `net.host` auf `127.0.0.1` stellen,
 wenn du den Port komplett schließen willst.
 
