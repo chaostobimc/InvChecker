@@ -7,7 +7,7 @@ const { load: loadConfig } = require('./lib/config')
 const { createScanner } = require('./lib/scanner')
 const { createModServer } = require('./lib/mod-server')
 const { attachTriggerListener } = require('./lib/trigger')
-const { microsoftLogin } = require('./lib/auth')
+const { authOptions } = require('./lib/auth')
 
 const CONFIG_FILE = process.env.INVCHECKER_CONFIG || process.argv[2] || path.join(__dirname, 'config.json')
 
@@ -16,34 +16,22 @@ async function main (configFile = CONFIG_FILE) {
   log.info(`InvChecker Bot – Ziel ${cfg.server.host}:${cfg.server.port} (${cfg.server.version}), Auth: ${cfg.auth.mode}`)
 
   // ---------------------------------------------------------------- Auth
-  let auth = { auth: cfg.auth.mode === 'offline' ? 'offline' : 'microsoft' }
-  if (cfg.auth.mode !== 'offline') {
-    try {
-      const ms = await microsoftLogin(cfg)
-      auth = { auth: 'microsoft', accessToken: ms.accessToken, username: ms.username }
-      log.ok(`Microsoft-Login fertig: ${ms.username}`)
-    } catch (err) {
-      log.error(`Microsoft-Login fehlgeschlagen: ${err.message}`)
-      log.error('Für einen Offline-Login auth.mode = "offline" in config.json setzen (nur möglich, wenn der Server das erlaubt).')
-      process.exit(1)
-    }
-  } else {
-    if (!cfg.auth.username) {
-      log.error('auth.mode = "offline" braucht auth.username in config.json')
-      process.exit(1)
-    }
-    auth = { auth: 'offline', username: cfg.auth.username }
-    log.warn('Offline-Login – funktioniert nur, wenn hugosmp.net im Offline-Modus läuft.')
+  let auth
+  try {
+    auth = authOptions(cfg)
+  } catch (err) {
+    log.error(`Auth-Konfiguration ungültig: ${err.message}`)
+    log.error('Für einen Offline-Login auth.mode = "offline" in config.json setzen (nur möglich, wenn der Server das erlaubt).')
+    process.exit(1)
   }
+  log.info(`Auth: ${auth.auth} – Token-Cache: ${auth.profilesFolder ? path.relative(process.cwd(), auth.profilesFolder) || auth.profilesFolder : 'n/a'}`)
 
   // ------------------------------------------------------------ Bot bauen
   const bot = mineflayer.createBot({
     host: cfg.server.host,
     port: cfg.server.port,
     version: cfg.server.version,
-    username: auth.username,
-    auth: auth.auth,
-    accessToken: auth.accessToken,
+    ...auth,
     hideErrors: cfg.bot.hideErrors,
     physicsEnabled: cfg.bot.physicsEnabled,
     viewDistance: cfg.bot.viewDistance,

@@ -27,6 +27,52 @@ Ping zwischen Mod und Server, wie schnell das Fenster aufgeht.
 
 ---
 
+## Was du eintragen musst
+
+Kurzfassung: **vier Werte**, zwei Dateien. Keine Azure-Registrierung, kein
+API-Key, kein Konto bei einem Drittanbieter.
+
+| # | Wo | Feld | Eintragen |
+| --- | --- | --- | --- |
+| 1 | `bot/config.json` | `net.token` | ein eigenes Passwort (Standard `invchecker-change-me`) |
+| 2 | Mod im Spiel → Einstellungen (`K`) | Token | **dasselbe** Passwort |
+| 3 | Mod im Spiel → Einstellungen (`K`) | Bot-Host | IP des Pi (Standard ist `127.0.0.1`, das ist nur der lokale Test) |
+| 4 | Bot-Terminal beim ersten Start | Gerätecode | `https://www.microsoft.com/link` + angezeigter Code |
+
+Danach nichts mehr: Die Microsoft-Tokens bleiben in `bot/.auth-cache` und der
+Bot meldet sich bei jedem Start (auch nach Reboot) still selbst an.
+
+**Microsoft-Login – warum kein API-Key nötig ist:** prismarine-auth benutzt im
+`live`-Flow eine First-Party-Title-ID von Microsoft selbst, nicht eine App, die
+du registrieren müsstest. Konkret setzt `minecraft-protocol` in
+`src/client/microsoftAuth.js` → `validateOptions()` als Default
+`authTitle = Titles.MinecraftNintendoSwitch` (`00000000441cc96b`) mit
+`deviceType = 'Nintendo'`, `flow = 'live'` — nachgemessen mit einem Stub um den
+`Authflow`-Konstruktor. Die Anfragen gehen an `login.live.com`, du brauchst also
+keine Azure-App-Registrierung. Falls Microsoft diesen Pfad je sperrt: dann
+`flow: 'msal'` und eine eigene Client-ID als `authTitle` übergeben
+(siehe prismarine-auth-README, Abschnitt *msal flow*).
+
+**`auth.username` in `bot/config.json`** ist optional. Es dient prismarine-auth
+nur als Cache-Schlüssel (der echte Name kommt aus dem Minecraft-Profil). Leer
+lassen ist okay, solange du nur einen Account einloggst.
+
+**Ein Hinweis zum Gerätecode-Flow:** Microsoft aktiviert laut
+[Entra-Doku](https://learn.microsoft.com/en-us/entra/fundamentals/security-defaults)
+ab 1. Juli 2026 für *neue Entra-Mandanten* Security Defaults, die den
+Gerätecode-Flow blockieren. Das betrifft Organisations-/Schulkonten, nicht
+private Microsoft-Konten über `login.live.com`. **Ungeprüft** in dieser Umgebung
+(kein Netzzugang zu `login.live.com` hier). Falls du ein Firmen-/Schulkonto
+nutzen willst und der Login mit einem Mandanten-Fehler abbricht, nimm ein privates
+Microsoft-Konto, dem Minecraft Java gehört.
+
+**Voraussetzung:** Das Bot-Konto braucht auf hugosmp.net das Recht, `/invsee`
+auszuführen. Das ist eine Server-Berechtigung, keine API – beim Admin freischalten,
+sonst antwortet der Server mit „Keine Berechtigung" und die Mod bekommt
+`command_failed`.
+
+---
+
 ## Ordner
 
 | Ordner | Inhalt |
