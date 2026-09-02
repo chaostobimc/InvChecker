@@ -83,7 +83,7 @@ sonst antwortet der Server mit „Keine Berechtigung" und die Mod bekommt
 | Ordner | Inhalt |
 | --- | --- |
 | [`bot/`](bot/) | Mineflayer-Bot (Node.js) – joint hugosmp.net, führt `/invsee` aus |
-| [`mod/`](mod/) | Fabric-Mod für Minecraft 1.21.4 – Trigger, HUD, Einstellungen |
+| [`mod/`](mod/) | Fabric-Mod für Minecraft 1.21.11 – Trigger, HUD, Einstellungen |
 | [`docs/`](docs/) | Setup für den Raspberry Pi, Fernzugriff, Tuning |
 
 ---
@@ -115,7 +115,7 @@ Wichtige Einstellungen in [`bot/config.json`](bot/config.json):
 
 | Schlüssel | Bedeutung |
 | --- | --- |
-| `server.host` / `server.port` / `server.version` | `hugosmp.net`, `25565`, `1.21.4` |
+| `server.host` / `server.port` / `server.version` | `hugosmp.net`, `25565`, `false` (= Version per Ping erkennen) |
 | `auth.mode` | `microsoft` (Standard) oder `offline` |
 | `invsee.command` | `/invsee {player}` – `{player}` wird ersetzt |
 | `invsee.slots` | Welche Slots Inventar / Rüstung / Offhand sind |
@@ -145,8 +145,8 @@ Das macht exakt dasselbe wie die Mod und druckt das Inventar plus Latenz:
 
 ## 2. Mod installieren
 
-1. **Fabric Loader** für 1.21.4 installieren (<https://fabricmc.net/use>)
-2. **Fabric API** `0.119.4+1.21.4` in den `mods`-Ordner legen
+1. **Fabric Loader** für 1.21.11 installieren (<https://fabricmc.net/use>) – Loader `0.19.5`
+2. **Fabric API** `0.141.6+1.21.11` in den `mods`-Ordner legen
 3. `invchecker-1.0.0.jar` in denselben `mods`-Ordner legen
 
 Bauen (JDK 21 nötig):
@@ -210,6 +210,6 @@ erreichbar machst (empfohlen).
 
 | Teil | Stand |
 | --- | --- |
-| Bot | **Getestet.** `cd bot && npm test` startet einen echten 1.21.4-Fake-Server, der Bot loggt ein, führt `/invsee` aus, scannt das Fenster und antwortet über TCP – 2 Tests, beide grün. |
+| Bot | **Getestet.** `cd bot && npm test` startet einen echten 1.21.4-Fake-Server, der Bot loggt ein, führt `/invsee` aus, scannt das Fenster und antwortet über TCP – 2 Tests, beide grün. Der Bot ist versionsunabhängig: `server.version = false` lässt ihn die Server-Version per Ping erkennen, getestet gegen 1.21.4 (`Eingeloggt … (Minecraft 1.21.4)`). `minecraft-data` kennt 1.21.11, geprüft über `require('minecraft-data').versions.pc`. |
 | `tools/check.js` | **Getestet** gegen den Fake-Server (Ausgabe oben ist echt). |
-| Mod | **Nicht kompiliert.** In dieser Arbeitsumgebung gibt es kein JDK/Gradle und keinen Zugriff auf Maven Central / maven.fabricmc.net, `gradlew build` konnte hier also nicht laufen. Alle benutzten Fabric-/Yarn-APIs wurden gegen die Javadocs für **yarn 1.21.4+build.1** und **fabric-api 0.119.4+1.21.4** geprüft (u. a. `HudLayerRegistrationCallback`, `LayeredDrawerWrapper.attachLayerAfter`, `ClientReceiveMessageEvents.GAME/CHAT`, `DrawContext`, `SliderWidget`, `EditBoxWidget`, `ClickableWidget.setTooltip`). |
+| Mod | **Nicht kompiliert.** In dieser Arbeitsumgebung gibt es kein JDK/Gradle und keinen Zugriff auf Maven Central, `gradlew build` konnte hier also nicht laufen. Für **1.21.11** wurde stattdessen jede benutzte API einzeln nachgeschlagen: Yarn `1.21.11+build.6` und Loader `0.19.5` als `stable` über die Fabric-Meta-API, Fabric API `0.141.6+1.21.11` über das offizielle `fabric-example-mod` (Branch 1.21.11) und Modrinth, Java 21 ebenfalls daraus. Geprüft gegen die Yarn-1.21.11-Javadocs: `Identifier.of/ofVanilla/tryParse`, `DrawContext.fill/drawText/drawTextWithShadow/drawItem/getScaledWindowWidth/enableScissor`, `MinecraftClient.player/textRenderer/crosshairTarget/currentScreen/options`. Die **HUD-API hat sich gebrochen geändert** und wurde migriert: `HudLayerRegistrationCallback`/`IdentifiedLayer` gibt es nicht mehr, ersetzt durch `HudElementRegistry.attachElementAfter(VanillaHudElements.MISC_OVERLAYS, …)` (Quelltext von fabric-rendering-v1, Branch 1.21.11, gelesen). `ClientReceiveMessageEvents` hat weiterhin `GAME` mit 2 und `CHAT` mit 5 Parametern – ebenfalls am Quelltext geprüft. **Nicht einzeln nachgeprüft:** `Screen`, `ButtonWidget`, `SliderWidget`, `EditBoxWidget`, `Registries`, `KeyBinding`, `InputUtil`, `EntityHitResult` sowie `MinecraftClient.getCurrentServerEntry/getWindow/setScreen` – die gelten als stabil, sind hier aber nicht belegt. Erst `gradlew build` gibt Gewissheit. |

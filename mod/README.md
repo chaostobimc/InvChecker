@@ -1,4 +1,4 @@
-# InvChecker Mod (Fabric 1.21.4)
+# InvChecker Mod (Fabric 1.21.11)
 
 Client-Mod: erkennt die Duel-Nachricht, schickt den Namen an den Bot und zeigt
 das Ergebnis als HUD.

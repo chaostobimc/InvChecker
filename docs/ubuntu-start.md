@@ -7,7 +7,7 @@ eingerichtet werden – Bot und Mod sprechen über `127.0.0.1`.
 ```
 ┌─────────────────── dein Ubuntu-Rechner ───────────────────┐
 │                                                           │
-│  Minecraft 1.21.4 ──(Fabric-Mod)──┐                       │
+│  Minecraft 1.21.11 ─(Fabric-Mod)──┐                       │
 │                                   │ 127.0.0.1:8765        │
 │  InvChecker-Bot (Node) ◄──────────┘      (JSON/TCP)       │
 │        │                                                  │
@@ -97,18 +97,18 @@ Der Minecraft-Ordner liegt unter Ubuntu in `~/.minecraft`:
 
 ```bash
 mkdir -p ~/.minecraft/mods
-# 1. Fabric API 0.119.4+1.21.4 von https://modrinth.com/mod/fabric-api
+# 1. Fabric API 0.141.6+1.21.11 von https://modrinth.com/mod/fabric-api
 #    (oder https://fabricmc.net/use) in ~/.minecraft/mods legen
 cp build/libs/invchecker-1.0.0.jar ~/.minecraft/mods/
 ls ~/.minecraft/mods        # beide JARs müssen da liegen
 ```
 
-**Fabric Loader** für 1.21.4 muss installiert sein (<https://fabricmc.net/use>) –
-danach im Minecraft-Launcher das Profil `fabric-loader-1.21.4` auswählen.
+**Fabric Loader** für 1.21.11 muss installiert sein (<https://fabricmc.net/use>) –
+danach im Minecraft-Launcher das Profil `fabric-loader-1.21.11` auswählen.
 
 ## 5. Minecraft starten und prüfen
 
-1. Minecraft 1.21.4 mit Fabric starten
+1. Minecraft 1.21.11 mit Fabric starten
 2. Auf **hugosmp.net** verbinden – die Mod ist nur dort aktiv
 3. `K` drücken → Einstellungen. Oben steht der Verbindungsstatus
    (`verbunden` / `verbinde erneut in … ms`)

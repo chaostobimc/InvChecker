@@ -30,7 +30,7 @@ async function main (configFile = CONFIG_FILE) {
   const bot = mineflayer.createBot({
     host: cfg.server.host,
     port: cfg.server.port,
-    version: cfg.server.version,
+    version: cfg.server.version || false,   // false = Version per Ping erkennen
     ...auth,
     hideErrors: cfg.bot.hideErrors,
     physicsEnabled: cfg.bot.physicsEnabled,
@@ -42,7 +42,6 @@ async function main (configFile = CONFIG_FILE) {
   })
 
   bot.invcheckerEnchantNames = new Map()
-  fillEnchantFallback(bot.invcheckerEnchantNames, cfg.server.version)
 
   // Die echte Reihenfolge der Enchantment-Registry kommt vom Server
   // (Konfigurations-Phase). minecraft-data sortiert alphabetisch und liefert
@@ -83,7 +82,11 @@ async function main (configFile = CONFIG_FILE) {
   bot.on('invchecker:fail', (failure) => modServer.send(failure))
 
   bot.on('login', () => {
-    log.ok(`Eingeloggt als ${bot.username} auf ${cfg.server.host}`)
+    log.ok(`Eingeloggt als ${bot.username} auf ${cfg.server.host} (Minecraft ${bot.version})`)
+    // Erst jetzt: Bei automatischer Versionserkennung (server.version = false)
+    // steht die Version vor dem Login nicht fest. fillEnchantFallback ist
+    // nicht-destruktiv und ueberschreibt die Server-Registry deshalb nie.
+    fillEnchantFallback(bot.invcheckerEnchantNames, bot.version)
     modServer.setBotOnline(true)
   })
   bot.on('spawn', () => {
@@ -150,9 +153,14 @@ async function main (configFile = CONFIG_FILE) {
 main.instances = []
 
 function fillEnchantFallback (map, version) {
+  if (!version) return
   try {
     const mcData = require('minecraft-data')(version)
-    for (const ench of mcData.enchantmentsArray || []) map.set(ench.id, ench.name)
+    for (const ench of mcData.enchantmentsArray || []) {
+      // Nur Luecken fuellen. Die Registry vom Server ist massgeblich und
+      // minecraft-data sortiert alphabetisch, liefert also falsche IDs.
+      if (!map.has(ench.id)) map.set(ench.id, ench.name)
+    }
   } catch { /* keine Daten für die Version – egal, der Server liefert sie */ }
 }
 

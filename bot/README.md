@@ -1,6 +1,6 @@
 # InvChecker Bot
 
-Mineflayer-Bot für Minecraft 1.21.4. Joint einen Server, führt auf Zuruf
+Mineflayer-Bot für Minecraft 1.21.x. Joint einen Server, führt auf Zuruf
 `/invsee <spieler>` aus, liest die Slots und schickt das Ergebnis als JSON an
 die Fabric-Mod.
 

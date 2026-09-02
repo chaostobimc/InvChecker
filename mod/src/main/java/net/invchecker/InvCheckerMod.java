@@ -4,8 +4,8 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.HudLayerRegistrationCallback;
-import net.fabricmc.fabric.api.client.rendering.v1.IdentifiedLayer;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.fabricmc.loader.api.FabricLoader;
 import net.invchecker.config.InvCheckerConfig;
 import net.invchecker.gui.ConfigScreen;
@@ -35,7 +35,7 @@ import org.lwjgl.glfw.GLFW;
 public final class InvCheckerMod implements ClientModInitializer {
 
 	public static final String MOD_ID = "invchecker";
-	public static final Identifier HUD_LAYER_ID = Identifier.of(MOD_ID, "invchecker_hud");
+	public static final Identifier HUD_ELEMENT_ID = Identifier.of(MOD_ID, "invchecker_hud");
 
 	private static InvCheckerConfig config;
 	private static ScanState scanState;
@@ -70,9 +70,13 @@ public final class InvCheckerMod implements ClientModInitializer {
 
 		ClientTickEvents.END_CLIENT_TICK.register(InvCheckerMod::onClientTick);
 
-		HudLayerRegistrationCallback.EVENT.register(layeredDrawer ->
-				layeredDrawer.attachLayerAfter(IdentifiedLayer.MISC_OVERLAYS, HUD_LAYER_ID,
-						(context, tickCounter) -> HudRenderer.render(context, MinecraftClient.getInstance())));
+		// fabric-api >= 0.141: Die Layer-API (HudLayerRegistrationCallback /
+		// IdentifiedLayer) wurde durch HudElementRegistry + VanillaHudElements
+		// ersetzt. attachElementAfter erbt die Render-Bedingung des Elements,
+		// an das es angehaengt wird – bei allen Vanilla-Elementen ausser SLEEP
+		// ist das Options#hideGui, also genau das gewuenschte Verhalten.
+		HudElementRegistry.attachElementAfter(VanillaHudElements.MISC_OVERLAYS, HUD_ELEMENT_ID,
+				(context, tickCounter) -> HudRenderer.render(context, MinecraftClient.getInstance()));
 
 		connection.connectAsync();
 		log("Geladen. Taste K = Einstellungen, J = manueller Scan des Gegners.");
