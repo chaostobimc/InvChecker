@@ -5,7 +5,7 @@ import net.invchecker.config.InvCheckerConfig;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.EditBoxWidget;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 
 import java.util.ArrayList;
@@ -141,7 +141,7 @@ public class ConfigScreen extends Screen {
 		addHeader("Anzeige");
 		addSlider("Anzeigedauer (Sekunden)", () -> config.displaySeconds,
 				value -> config.displaySeconds = Math.round(value * 10.0D) / 10.0D, 1.0D, 120.0D, "%.1f s");
-		addSlider("Schriftgröße", () -> (double) config.scale, value -> config.scale = (float) value, 0.5D, 2.0D, "%.2f x");
+		addSlider("Schriftgröße", () -> (double) config.scale, value -> config.scale = value.floatValue(), 0.5D, 2.0D, "%.2f x");
 		addSlider("Hintergrund-Deckkraft", () -> (double) config.backgroundAlpha,
 				value -> config.backgroundAlpha = (int) Math.round(value), 0.0D, 255.0D, "%.0f");
 		addNumber("Maximale Einträge", () -> config.maxEntries, value -> config.maxEntries = value, 1, 100);
@@ -194,8 +194,8 @@ public class ConfigScreen extends Screen {
 		rows.add(new Row(label) {
 			@Override
 			void build(ConfigScreen screen, int x, int y) {
-				EditBoxWidget widget = new EditBoxWidget(screen.textRenderer, x + 160, y, 200, 20,
-						Text.literal(""), Text.literal(label));
+				TextFieldWidget widget = new TextFieldWidget(screen.textRenderer, x + 160, y, 200, 20,
+						Text.literal(label));
 				widget.setMaxLength(512);
 				widget.setText(getter.get());
 				widget.setChangedListener(value -> {
@@ -211,8 +211,8 @@ public class ConfigScreen extends Screen {
 		rows.add(new Row(label) {
 			@Override
 			void build(ConfigScreen screen, int x, int y) {
-				EditBoxWidget widget = new EditBoxWidget(screen.textRenderer, x + 210, y, 90, 20,
-						Text.literal(""), Text.literal(label));
+				TextFieldWidget widget = new TextFieldWidget(screen.textRenderer, x + 210, y, 90, 20,
+						Text.literal(label));
 				widget.setMaxLength(8);
 				widget.setText(String.valueOf(getter.get()));
 				widget.setChangedListener(value -> {
@@ -288,7 +288,7 @@ public class ConfigScreen extends Screen {
 		});
 	}
 
-	private abstract static class Row {
+	private static class Row {
 		final String label;
 		boolean header;
 

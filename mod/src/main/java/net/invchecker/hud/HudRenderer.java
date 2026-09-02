@@ -11,6 +11,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
+import net.minecraft.util.Identifier;
 
 import java.util.List;
 
@@ -208,10 +209,15 @@ public final class HudRenderer {
 	}
 
 	private static Item resolve(String id) {
+		// 1.21.11: Registries.ITEM.get(String) existiert nicht mehr, es gibt nur
+		// get(Identifier), get(RegistryKey) und get(int). Also erst parsen.
 		try {
-			Item item = Registries.ITEM.get(id);
-			if (item != null && item != Items.AIR) {
-				return item;
+			Identifier identifier = Identifier.tryParse(id);
+			if (identifier != null) {
+				Item item = Registries.ITEM.get(identifier);
+				if (item != null && item != Items.AIR) {
+					return item;
+				}
 			}
 		} catch (Exception error) {
 			// unbekannte Item-ID (z. B. von einem Mod auf dem Server)

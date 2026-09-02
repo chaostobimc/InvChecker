@@ -63,10 +63,15 @@ public final class InvCheckerMod implements ClientModInitializer {
 		// 2. Backup: latest.log mitlesen (in der Config abschaltbar).
 		logTailer.start();
 
+		// 1.21.11: Der letzte Konstruktor-Parameter ist kein String mehr, sondern
+		// ein KeyBinding.Category-Record. Fuer eine eigene Kategorie gaebe es
+		// KeyBinding.Category.create(Identifier.of(MOD_ID, "invchecker")); deren
+		// Anzeigetext laeuft aber ueber einen Uebersetzungsschluessel, den wir
+		// nicht sicher kennen – deshalb die fertige Vanilla-Kategorie MISC.
 		openConfigKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-				"key.invchecker.open_config", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K, "category.invchecker"));
+				"key.invchecker.open_config", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K, KeyBinding.Category.MISC));
 		manualScanKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-				"key.invchecker.manual_scan", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_J, "category.invchecker"));
+				"key.invchecker.manual_scan", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_J, KeyBinding.Category.MISC));
 
 		ClientTickEvents.END_CLIENT_TICK.register(InvCheckerMod::onClientTick);
 

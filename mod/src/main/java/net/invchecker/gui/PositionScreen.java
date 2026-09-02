@@ -4,6 +4,7 @@ import net.invchecker.InvCheckerMod;
 import net.invchecker.config.InvCheckerConfig;
 import net.invchecker.hud.HudRenderer;
 import net.invchecker.scan.ScanResult;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -59,26 +60,28 @@ public class PositionScreen extends Screen {
 		HudRenderer.render(context, client);
 	}
 
+	// 1.21.11: Die Mouse-Events bekommen ein Click-Record (x, y, buttonInfo)
+	// statt (double mouseX, double mouseY, int button).
 	@Override
-	public boolean mouseClicked(double mouseX, double mouseY, int button) {
+	public boolean mouseClicked(Click click, boolean doubled) {
 		dragging = true;
-		moveTo(mouseX, mouseY);
-		return super.mouseClicked(mouseX, mouseY, button);
+		moveTo(click.x(), click.y());
+		return super.mouseClicked(click, doubled);
 	}
 
 	@Override
-	public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+	public boolean mouseDragged(Click click, double deltaX, double deltaY) {
 		if (dragging) {
-			moveTo(mouseX, mouseY);
+			moveTo(click.x(), click.y());
 		}
-		return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+		return super.mouseDragged(click, deltaX, deltaY);
 	}
 
 	@Override
-	public boolean mouseReleased(double mouseX, double mouseY, int button) {
+	public boolean mouseReleased(Click click) {
 		dragging = false;
 		config.save();
-		return super.mouseReleased(mouseX, mouseY, button);
+		return super.mouseReleased(click);
 	}
 
 	private void moveTo(double mouseX, double mouseY) {

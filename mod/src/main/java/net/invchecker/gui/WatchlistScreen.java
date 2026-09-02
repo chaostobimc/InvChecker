@@ -5,7 +5,7 @@ import net.invchecker.config.InvCheckerConfig;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.EditBoxWidget;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -58,8 +58,9 @@ public class WatchlistScreen extends Screen {
 		clearChildren();
 		applyFilter();
 
-		EditBoxWidget searchField = new EditBoxWidget(textRenderer, this.width / 2 - 155, 32, 200, 20,
-				Text.literal("z. B. totem"), Text.literal("Suche"));
+		TextFieldWidget searchField = new TextFieldWidget(textRenderer, this.width / 2 - 155, 32, 200, 20,
+				Text.literal("Suche"));
+		searchField.setSuggestion("z. B. totem");
 		searchField.setMaxLength(64);
 		searchField.setText(search);
 		searchField.setChangedListener(value -> {
