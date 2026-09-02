@@ -38,7 +38,7 @@ const DEFAULTS = {
     template: '{target}: {summary}',
     whisperTemplate: '/msg {player} {target}: {summary}'
   },
-  net: { host: '0.0.0.0', port: 8766, token: 'invchecker-change-me', maxConnections: 8, logTraffic: false }
+  net: { host: '0.0.0.0', port: 2895, token: 'invchecker-change-me', maxConnections: 8, logTraffic: false }
 }
 
 function isPlainObject (v) {

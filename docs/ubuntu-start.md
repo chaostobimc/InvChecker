@@ -8,7 +8,7 @@ eingerichtet werden – Bot und Mod sprechen über `127.0.0.1`.
 ┌─────────────────── dein Ubuntu-Rechner ───────────────────┐
 │                                                           │
 │  Minecraft 1.21.11 ─(Fabric-Mod)──┐                       │
-│                                   │ 127.0.0.1:8766        │
+│                                   │ 127.0.0.1:2895        │
 │  InvChecker-Bot (Node) ◄──────────┘      (JSON/TCP)       │
 │        │                                                  │
 └────────┼──────────────────────────────────────────────────┘
@@ -17,9 +17,9 @@ eingerichtet werden – Bot und Mod sprechen über `127.0.0.1`.
     hugosmp.net
 ```
 
-Die Config passt dafür schon: `net.host = 127.0.0.1`, `net.port = 8766`,
+Die Config passt dafür schon: `net.host = 127.0.0.1`, `net.port = 2895`,
 `net.token = invchecker-change-me` – und die Mod hat genau dieselben Werte als
-Default (`botHost = 127.0.0.1`, `botPort = 8766`, gleiches Token). Du musst also
+Default (`botHost = 127.0.0.1`, `botPort = 2895`, gleiches Token). Du musst also
 **nichts** eintragen, damit es läuft.
 
 ---
@@ -61,7 +61,7 @@ Code auf dem Handy oder PC eingeben – fertig. Die Tokens liegen danach in
 Danach sollte dastehen:
 
 ```
-[ ok  ] TCP für Mod bereit auf 127.0.0.1:8766 (Token: STANDARDWERT – bitte ändern!)
+[ ok  ] TCP für Mod bereit auf 127.0.0.1:2895 (Token: STANDARDWERT – bitte ändern!)
 [ ok  ] Enchantment-Registry vom Server übernommen (42 Einträge)
 [ ok  ] Verbunden als <DeinBotName> auf hugosmp.net. Warte auf Trigger der Mod…
 ```
@@ -192,7 +192,7 @@ den also vorher einmal mit `npm start` im Terminal erledigen.
 | Warnung `EBADENGINE` bei `npm install` | Node ist zu alt. npm warnt nur – der Bot kann dann trotzdem später scheitern → Schritt 1 |
 | Bot hängt bei der Code-Ausgabe | Der Gerätecode ist abgelaufen, Bot neu starten |
 | `Kein Minecraft-Profil gefunden` | Das Microsoft-Konto besitzt die Java Edition nicht |
-| Mod zeigt `verbinde erneut …` dauerhaft | Läuft der Bot? `ss -tlnp \| grep 8766` muss `LISTEN 127.0.0.1:8766` zeigen |
+| Mod zeigt `verbinde erneut …` dauerhaft | Läuft der Bot? `ss -tlnp \| grep 2895` muss `LISTEN 127.0.0.1:2895` zeigen |
 | HUD erscheint nicht | Bist du wirklich auf hugosmp.net? Die Mod ist nur auf Servern aus der `servers`-Liste aktiv |
 
 Fehlercodes, die der Bot selbst meldet (alle aus `lib/mod-server.js` und
