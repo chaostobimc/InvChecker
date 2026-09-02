@@ -1,0 +1,8 @@
+{ "server": { "host": "127.0.0.1", "port": 25781, "version": "1.21.4" },
+  "auth": { "mode": "offline", "username": "InvCheckerBot" },
+  "bot": { "autoReconnect": false },
+  "invsee": { "command": "/invsee {player}", "windowTimeoutMs": 2000, "closeWindowAfterScan": true,
+    "slots": { "inventory": [0,35], "armor": [39,42], "offhand": [43,43] },
+    "ignoreItems": ["minecraft:barrier"] },
+  "scan": { "dedupeWindowMs": 400, "minIntervalMs": 0, "queueSize": 2 },
+  "net": { "host": "127.0.0.1", "port": 8792, "token": "invchecker-change-me" } }
