@@ -140,6 +140,8 @@ function createModServer (bot, cfg, scanner) {
   })
 
   server.on('error', (err) => {
+    // EADDRINUSE wird in listen() mit einer Handlungsanweisung behandelt.
+    if (err.code === 'EADDRINUSE') return
     log.error(`TCP-Server-Fehler: ${err.message}`)
   })
 
@@ -152,7 +154,17 @@ function createModServer (bot, cfg, scanner) {
     get botOnline () { return botOnline },
     listen () {
       return new Promise((resolve, reject) => {
-        server.once('error', reject)
+        server.once('error', (err) => {
+          if (err.code !== 'EADDRINUSE') { reject(err); return }
+          const e = new Error(
+            `Port ${cfg.net.port} auf ${cfg.net.host} ist schon belegt – der Bot kann nicht starten.\n` +
+            `  Meistens laeuft noch eine zweite Instanz des Bots.\n` +
+            `  Herausfinden:   ss -ltnp | grep ${cfg.net.port}\n` +
+            `  Beenden:        kill <PID>\n` +
+            `  Oder in bot/config.json unter "net" einen freien "port" waehlen.`)
+          e.friendly = true
+          reject(e)
+        })
         server.listen(cfg.net.port, cfg.net.host, () => {
           server.removeListener('error', reject)
           const addr = server.address()

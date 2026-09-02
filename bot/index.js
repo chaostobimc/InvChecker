@@ -13,7 +13,8 @@ const CONFIG_FILE = process.env.INVCHECKER_CONFIG || process.argv[2] || path.joi
 
 async function main (configFile = CONFIG_FILE) {
   const cfg = loadConfig(configFile)
-  log.info(`InvChecker Bot – Ziel ${cfg.server.host}:${cfg.server.port} (${cfg.server.version}), Auth: ${cfg.auth.mode}`)
+  const versionInfo = cfg.server.version ? `Version ${cfg.server.version}` : 'Version automatisch per Ping'
+  log.info(`InvChecker Bot – Ziel ${cfg.server.host}:${cfg.server.port} (${versionInfo}), Auth: ${cfg.auth.mode}`)
 
   // ---------------------------------------------------------------- Auth
   let auth
@@ -166,7 +167,8 @@ function fillEnchantFallback (map, version) {
 
 if (require.main === module) {
   main().catch((err) => {
-    log.error(err.stack || err.message)
+    // err.friendly = Meldung ist bereits eine Handlungsanweisung, kein Stacktrace noetig.
+    log.error(err.friendly ? err.message : (err.stack || err.message))
     process.exit(1)
   })
 }
