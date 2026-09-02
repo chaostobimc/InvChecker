@@ -32,11 +32,27 @@
     "ignoreOwnInventory": true,
     "_slots": "Standard-Layout fuer ein 9x6-invsee-GUI: Reihe 1-4 (Slots 0-35) = Spielerinventar, Reihe 5 = Deko mit Ruestung (39-42) und Offhand (43), Reihe 6 = Deko. Slotnummern starten bei 0 oben links.",
     "slots": {
-      "inventory": [0, 35],
-      "armor": [39, 42],
-      "offhand": [43, 43]
+      "inventory": [
+        0,
+        35
+      ],
+      "armor": [
+        39,
+        42
+      ],
+      "offhand": [
+        43,
+        43
+      ]
     },
-    "ignoreItems": ["minecraft:barrier", "minecraft:light", "minecraft:structure_void", "minecraft:gray_stained_glass_pane", "minecraft:armor_stand", "minecraft:nether_star"]
+    "ignoreItems": [
+      "minecraft:barrier",
+      "minecraft:light",
+      "minecraft:structure_void",
+      "minecraft:gray_stained_glass_pane",
+      "minecraft:armor_stand",
+      "minecraft:nether_star"
+    ]
   },
   "trigger": {
     "_info": "Optional: Der Bot horcht zusaetzlich selbst im Serverchat nach dem Muster. Die Mod-Erkennung (latest.log / Chat-Event) ist immer der schnellste Weg, das hier ist nur ein Backup.",
@@ -56,8 +72,8 @@
     "whisperTemplate": "/msg {player} {target}: {summary}"
   },
   "net": {
-    "_info": "TCP-Server fuer die Mod. host 0.0.0.0 = von ueberall erreichbar. token MUSS mit der Mod uebereinstimmen.",
-    "host": "0.0.0.0",
+    "_info": "TCP-Server fuer die Mod. host 127.0.0.1 = nur dieser Rechner (Bot + Minecraft auf einem PC). 0.0.0.0 = auch aus dem LAN/Internet erreichbar, dann token MUSS geaendert werden. token MUSS immer mit der Mod uebereinstimmen.",
+    "host": "127.0.0.1",
     "port": 8765,
     "token": "invchecker-change-me",
     "maxConnections": 8,

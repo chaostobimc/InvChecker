@@ -5,6 +5,11 @@ Hintergrund `/invsee <Name>` aus, scannt das Inventar und schickt das Ergebnis
 in Millisekunden an deine Fabric-Mod. Die zeigt dir im Spiel ein HUD mit allen
 Items, der Rüstung und dem Offhand-Slot des Gegners.
 
+> **Schnellstart:** Bot und Minecraft auf demselben Ubuntu-Rechner?
+> → [`docs/ubuntu-start.md`](docs/ubuntu-start.md)
+> Bot auf einem Raspberry Pi und Zugriff von unterwegs?
+> → [`docs/pi-setup.md`](docs/pi-setup.md)
+
 ```
 Minecraft-Client (Fabric-Mod)                     Raspberry Pi 5 (Mineflayer-Bot)
 ┌────────────────────────────────┐                ┌──────────────────────────────────┐
