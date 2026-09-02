@@ -1,0 +1,15 @@
+# Node
+node_modules/
+npm-debug.log*
+.auth-cache/
+
+# Java / Gradle
+mod/.gradle/
+mod/build/
+mod/run/
+*.class
+
+# IDE
+.idea/
+.vscode/
+*.iml

@@ -1,0 +1,27 @@
+{
+  "name": "invchecker-bot",
+  "version": "1.0.0",
+  "description": "Mineflayer bot that runs /invsee <player> and streams the scanned inventory to the InvChecker Fabric mod over a low-latency TCP link.",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node index.js",
+    "bot": "node index.js",
+    "check": "node tools/check.js",
+    "test": "node --test test/*.test.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "mineflayer": "^4.38.0",
+    "prismarine-auth": "^3.1.1"
+  },
+  "devDependencies": {
+    "minecraft-protocol": "^1.68.0",
+    "prismarine-item": "^1.18.0",
+    "prismarine-registry": "^1.11.0",
+    "prismarine-windows": "^2.10.0"
+  },
+  "license": "MIT"
+}

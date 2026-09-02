@@ -1,0 +1,72 @@
+{
+  "_info": "Alle Werte koennen angepasst werden. Aenderungen brauchen einen Bot-Neustart (Strg+C, dann npm start).",
+
+  "server": {
+    "host": "hugosmp.net",
+    "port": 25565,
+    "version": "1.21.4"
+  },
+
+  "auth": {
+    "_info": "mode: 'microsoft' = Premium-Login per Microsoft-Konto (Geraetecode beim ersten Start). 'offline' = nur Nickname, funktioniert nur auf Servern im Offline-Modus.",
+    "mode": "microsoft",
+    "username": "",
+    "cacheDir": ".auth-cache"
+  },
+
+  "bot": {
+    "brand": "InvChecker",
+    "hideErrors": false,
+    "physicsEnabled": false,
+    "viewDistance": "tiny",
+    "autoReconnect": true,
+    "reconnectDelayMs": 2000,
+    "reconnectMaxDelayMs": 30000,
+    "keepAlive": true,
+    "checkTimeoutInterval": 60000
+  },
+
+  "invsee": {
+    "_info": "Befehl, den der Bot ausfuehrt. {player} wird durch den Zielnamen ersetzt (ohne / am Anfang schreiben).",
+    "command": "/invsee {player}",
+    "windowTimeoutMs": 2500,
+    "closeWindowAfterScan": true,
+    "ignoreOwnInventory": true,
+    "_slots": "Standard-Layout fuer ein 9x6-invsee-GUI: Reihe 1-4 (Slots 0-35) = Spielerinventar, Reihe 5 = Deko mit Ruestung (39-42) und Offhand (43), Reihe 6 = Deko. Slotnummern starten bei 0 oben links.",
+    "slots": {
+      "inventory": [0, 35],
+      "armor": [39, 42],
+      "offhand": [43, 43]
+    },
+    "ignoreItems": ["minecraft:barrier", "minecraft:light", "minecraft:structure_void", "minecraft:gray_stained_glass_pane", "minecraft:armor_stand", "minecraft:nether_star"]
+  },
+
+  "trigger": {
+    "_info": "Optional: Der Bot horcht zusaetzlich selbst im Serverchat nach dem Muster. Die Mod-Erkennung (latest.log / Chat-Event) ist immer der schnellste Weg, das hier ist nur ein Backup.",
+    "enabled": false,
+    "pattern": "Gegner gefunden:\\s*([A-Za-z0-9_]{1,16})",
+    "dedupeWindowMs": 1500,
+    "source": "chat"
+  },
+
+  "scan": {
+    "dedupeWindowMs": 800,
+    "minIntervalMs": 150,
+    "queueSize": 2
+  },
+
+  "response": {
+    "sayResultInChat": false,
+    "template": "{target}: {summary}",
+    "whisperTemplate": "/msg {player} {target}: {summary}"
+  },
+
+  "net": {
+    "_info": "TCP-Server fuer die Mod. host 0.0.0.0 = von ueberall erreichbar. token MUSS mit der Mod uebereinstimmen.",
+    "host": "0.0.0.0",
+    "port": 8765,
+    "token": "invchecker-change-me",
+    "maxConnections": 8,
+    "logTraffic": false
+  }
+}

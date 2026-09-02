@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "id": "invchecker",
+  "version": "${version}",
+  "name": "InvChecker",
+  "description": "Zeigt das Inventar des Duel-Gegners sofort im Spiel an. Ein Mineflayer-Bot führt /invsee aus und schickt das Ergebnis in Millisekunden an diese Mod.",
+  "authors": [
+    "InvChecker"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/invchecker/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "net.invchecker.InvCheckerMod"
+    ]
+  },
+  "mixins": [],
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "~1.21.4",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
