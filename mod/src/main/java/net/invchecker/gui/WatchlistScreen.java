@@ -144,7 +144,13 @@ public class WatchlistScreen extends Screen {
 
 	@Override
 	public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-		renderBackground(context, mouseX, mouseY, delta);
+		// 1.21.11: renderBackground() hier NICHT aufrufen. Es wendet einen
+		// Blur-Post-Effekt an, und das Spiel erlaubt nur einen Blur pro Frame –
+		// der Hintergrund laeuft bereits ueber die Screen-Render-Pipeline. Ein
+		// zweiter Aufruf wirft: IllegalStateException: Can only blur once per frame
+		// (Crash-Report 2026-09-02, ConfigScreen.java:68). Stattdessen dimmen wir
+		// selbst: vorhersagbar und ohne Post-Effekt.
+		context.fill(0, 0, this.width, this.height, 0xA0101010);
 		super.render(context, mouseX, mouseY, delta);
 		int pages = Math.max(1, (filtered.size() + PER_PAGE - 1) / PER_PAGE);
 		context.drawTextWithShadow(textRenderer, Text.literal("Item-Liste – Klicken wählt ab/an"),
