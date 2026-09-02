@@ -36,13 +36,24 @@ public final class ValueSliderWidget extends SliderWidget {
 		return min + value * (max - min);
 	}
 
+	// WICHTIG: Der Konstruktor von SliderWidget ruft updateMessage() selbst auf –
+	// und damit diese Ueberschreibung, BEVOR die Felder dieser Klasse zugewiesen
+	// sind (format ist dann noch null). Ohne die Abfrage darunter wirft
+	// String.format(Locale, null, ...) eine NullPointerException, und der
+	// Config-Screen crasht beim Oeffnen (Taste K).
 	@Override
 	protected void updateMessage() {
-		setMessage(Text.literal(String.format(java.util.Locale.ROOT, format, min + value * (max - min))));
+		if (format == null) {
+			return;
+		}
+		setMessage(Text.literal(String.format(java.util.Locale.ROOT, format, currentValue())));
 	}
 
 	@Override
 	protected void applyValue() {
-		onChange.accept(min + value * (max - min));
+		if (onChange == null) {
+			return;
+		}
+		onChange.accept(currentValue());
 	}
 }
