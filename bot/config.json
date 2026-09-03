@@ -3,8 +3,8 @@
   "server": {
     "host": "hugosmp.net",
     "port": 25565,
-    "version": false,
-    "_info_version": "false = Version automatisch per Ping erkennen (empfohlen – der Bot laeuft dann auf 1.21.4 wie auf 1.21.11 ohne Config-Aenderung). Alternativ feste Version wie \"1.21.11\" eintragen, das spart einen Ping beim Verbinden."
+    "version": "1.21.11",
+    "_info_version": "Feste Version! hugosmp.net ist ein Mehr-Versionen-Proxy: Der Ping meldet Protokoll 775 (26.1.2), der Server antwortet in der Configuration-Phase aber mit minecraft:core 1.21.8 und haengt danach, wenn der Bot als 26.1.2 spricht (erzwungenes Ressourcenpaket wird nicht abgeschlossen, der Bot erreicht nie den play-Zustand). 1.21.11 = Protokoll 774, das ist die Version, mit der dein Client erfolgreich verbindet. false = Version per Ping erkennen (funktioniert hier NICHT)."
   },
   "auth": {
     "_info": "mode 'microsoft' = Premium-Login per Geraetecode (beim ersten Start wird eine URL+Code angezeigt -> https://www.microsoft.com/link). Es ist KEINE Azure-App-Registrierung und kein API-Key noetig: prismarine-auth nutzt im 'live'-Flow die First-Party-Title-ID von Minecraft. 'offline' = nur Nickname, geht nur auf Servern im Offline-Modus.",

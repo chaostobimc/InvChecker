@@ -5,7 +5,9 @@ const path = require('node:path')
 const log = require('./log')
 
 const DEFAULTS = {
-  server: { host: 'hugosmp.net', port: 25565, version: false },  // false = per Ping erkennen
+  server: { host: 'hugosmp.net', port: 25565, version: '1.21.11' },  // fest pinnen, nicht per Ping!
+  // hugosmp.net pingt mit Protokoll 775 (26.1.2), laeuft aber dahinter aelter und haengt die
+  // Configuration-Phase auf, wenn der Bot als 26.1.2 spricht. 1.21.11 = Protokoll 774.
   auth: { mode: 'microsoft', username: '', cacheDir: '.auth-cache' },
   bot: {
     brand: 'InvChecker',
