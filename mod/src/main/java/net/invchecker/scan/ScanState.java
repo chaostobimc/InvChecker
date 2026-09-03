@@ -175,8 +175,12 @@ public final class ScanState {
 			visible = list;
 			return;
 		}
+		// "watchlist" mit leerer Liste wuerde alles ausblenden ("(leer)") – dann
+		// lieber alles zeigen, bis der Spieler tatsaechlich etwas gemerkt hat.
+		boolean watchOnly = "watchlist".equals(config.mode)
+				&& config.watchlist != null && !config.watchlist.isEmpty();
 		for (ScanResult.Entry entry : current.items) {
-			if ("watchlist".equals(config.mode) && !config.isWatched(entry.id)) {
+			if (watchOnly && !config.isWatched(entry.id)) {
 				continue;
 			}
 			list.add(entry);

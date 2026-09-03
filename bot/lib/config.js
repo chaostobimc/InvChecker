@@ -26,7 +26,7 @@ const DEFAULTS = {
     windowTimeoutMs: 2500,
     closeWindowAfterScan: true,
     ignoreOwnInventory: true,
-    slots: { inventory: [0, 35], armor: [39, 42], offhand: [43, 43] },
+    slots: { inventory: [0, 35], armor: [37, 40], offhand: [46, 46] },
     ignoreItems: ['minecraft:barrier']
   },
   trigger: {

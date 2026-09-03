@@ -32,19 +32,19 @@
     "windowTimeoutMs": 2500,
     "closeWindowAfterScan": true,
     "ignoreOwnInventory": true,
-    "_slots": "Standard-Layout fuer ein 9x6-invsee-GUI: Reihe 1-4 (Slots 0-35) = Spielerinventar, Reihe 5 = Deko mit Ruestung (39-42) und Offhand (43), Reihe 6 = Deko. Slotnummern starten bei 0 oben links.",
+    "_slots": "Layout des hugosmp-invsee-GUIs (9x6, Slot 0 oben links): Reihe 1-4 = Spielerinventar (0-35); Reihe 5: 36=Ruestungsstaender, 37-40=Ruestung, 41-44=Deko; Reihe 6: 45=Netherstern, 46=Offhand, 47-53=Deko.",
     "slots": {
       "inventory": [
         0,
         35
       ],
       "armor": [
-        39,
-        42
+        37,
+        40
       ],
       "offhand": [
-        43,
-        43
+        46,
+        46
       ]
     },
     "ignoreItems": [

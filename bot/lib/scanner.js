@@ -116,6 +116,16 @@ function createScanner (bot, cfg) {
     return title.includes(target.toLowerCase())
   }
 
+  // ignoreItems liegt namespaced vor ("minecraft:barrier"), item.name ist es in
+  // mineflayer meist nicht ("barrier"). Beide Formen vergleichen.
+  const ignoreSet = new Set()
+  for (const raw of invsee.ignoreItems || []) {
+    const bare = String(raw).replace(/^minecraft:/, '')
+    ignoreSet.add(bare)
+    ignoreSet.add('minecraft:' + bare)
+  }
+  const isIgnored = (name) => name !== undefined && ignoreSet.has(name)
+
   function readSlots (window) {
     const ranges = invsee.slots
     const items = []
@@ -130,7 +140,7 @@ function createScanner (bot, cfg) {
     for (let slot = 0; slot < limit; slot++) {
       const item = slots[slot]
       if (!item || item.count === 0) continue
-      if (invsee.ignoreItems.has(item.name)) continue
+      if (isIgnored(item.name)) continue
 
       let bucket
       if (inRange(slot, ranges.armor)) bucket = armor
@@ -190,6 +200,20 @@ function createScanner (bot, cfg) {
     bot.emit('invchecker:result', result)
   }
 
+  /** Kompakte Zeile aller belegten Container-Slots – beweist das echte Layout. */
+  function logSlotDump (window) {
+    const slots = window.slots || []
+    const limit = invsee.ignoreOwnInventory && Number.isFinite(window.inventoryStart)
+      ? Math.min(slots.length, window.inventoryStart)
+      : slots.length
+    const parts = []
+    for (let i = 0; i < limit; i++) {
+      const it = slots[i]
+      if (it && it.count > 0) parts.push(`${i}:${it.name}x${it.count}`)
+    }
+    log.info(`Slot-Dump (0..${limit - 1}): ${parts.join(' ') || '(leer)'}`)
+  }
+
   function scanWindow (window) {
     if (window.invcheckerScanned) return false
     const titleMatched = pending.some((req) => titleMatches(window, req.target))
@@ -200,6 +224,7 @@ function createScanner (bot, cfg) {
 
     window.invcheckerScanned = true
     req.windowAt = Date.now()
+    logSlotDump(window)
     log.debug(`Fenster gelesen: id=${window.id} type=${window.type} slots=${window.slots?.length ?? 0} ` +
       `eigenStart=${window.inventoryStart} belegt=${window.slots ? window.slots.filter(Boolean).length : 0} ` +
       `Titel="${flattenText(window.title)}" titelTreffer=${titleMatched}`)
