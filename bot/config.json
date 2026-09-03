@@ -23,7 +23,8 @@
     "reconnectDelayMs": 2000,
     "reconnectMaxDelayMs": 30000,
     "keepAlive": true,
-    "checkTimeoutInterval": 60000
+    "checkTimeoutInterval": 60000,
+    "resourcePackTimeoutMs": 120000
   },
   "invsee": {
     "_info": "Befehl, den der Bot ausfuehrt. {player} wird durch den Zielnamen ersetzt (ohne / am Anfang schreiben).",

@@ -7,6 +7,7 @@ const { load: loadConfig } = require('./lib/config')
 const { createScanner } = require('./lib/scanner')
 const { createModServer } = require('./lib/mod-server')
 const { attachTriggerListener } = require('./lib/trigger')
+const { attachResourcePackHandler, watchConfigurationPhase } = require('./lib/resource-pack')
 const { authOptions } = require('./lib/auth')
 
 const CONFIG_FILE = process.env.INVCHECKER_CONFIG || process.argv[2] || path.join(__dirname, 'config.json')
@@ -57,23 +58,13 @@ async function main (configFile = CONFIG_FILE) {
   })
 
   // hugosmp.net schickt in der Configuration-Phase ein ERZWUNGENES Server-
-  // Ressourcenpaket (add_resource_pack, forced: true). mineflayers Plugin
-  // lib/plugins/resource_pack.js emittiert dazu nur das Event 'resourcePack'
-  // und antwortet NICHT selbst. Der Server wartet aber auf resource_pack_receive,
-  // bevor er finish_configuration schickt – ohne Antwort bleibt der Client fuer
-  // immer im Zustand 'configuration' und erreicht nie 'play'.
-  // scanner.isReady() prueft auf _client.state === 'play', der Bot wirkt also
-  // dauerhaft als "noch nicht eingeloggt", obwohl Login und Profil geklappt haben.
-  // Antwort-Paket ist in der configuration-Phase gueltig (geprueft gegen
-  // minecraft-data 26.1.2: resource_pack_receive ist dort vorhanden).
-  bot.on('resourcePack', () => {
-    try {
-      bot.acceptResourcePack()
-      log.ok('Server-Ressourcenpaket angenommen – Configuration-Phase kann beendet werden.')
-    } catch (err) {
-      log.warn(`Ressourcenpaket konnte nicht angenommen werden: ${err.message}`)
-    }
-  })
+  // Ressourcenpaket. minecraft-protocol behandelt add_resource_pack nicht, und
+  // mineflayer emittiert dazu nur ein Event. Ohne vollstaendige Antwort wartet
+  // der Server ewig auf finish_configuration und der Bot erreicht nie 'play'.
+  // Der Handler laedt das Paket deshalb wirklich und meldet die komplette
+  // Vanilla-Sequenz ACCEPTED -> DOWNLOADED -> SUCCESSFULLY_LOADED.
+  attachResourcePackHandler(bot, { timeoutMs: cfg.bot.resourcePackTimeoutMs })
+  watchConfigurationPhase(bot)
 
   const scanner = createScanner(bot, cfg)
   const modServer = createModServer(bot, cfg, scanner)

@@ -18,7 +18,8 @@ const DEFAULTS = {
     reconnectDelayMs: 2000,
     reconnectMaxDelayMs: 30000,
     keepAlive: true,
-    checkTimeoutInterval: 60000
+    checkTimeoutInterval: 60000,
+    resourcePackTimeoutMs: 120000  // Timeout fuer den Download des Server-Ressourcenpakets
   },
   invsee: {
     command: '/invsee {player}',
