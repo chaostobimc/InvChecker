@@ -56,6 +56,25 @@ async function main (configFile = CONFIG_FILE) {
     log.ok(`Enchantment-Registry vom Server übernommen (${packet.entries.length} Einträge)`)
   })
 
+  // hugosmp.net schickt in der Configuration-Phase ein ERZWUNGENES Server-
+  // Ressourcenpaket (add_resource_pack, forced: true). mineflayers Plugin
+  // lib/plugins/resource_pack.js emittiert dazu nur das Event 'resourcePack'
+  // und antwortet NICHT selbst. Der Server wartet aber auf resource_pack_receive,
+  // bevor er finish_configuration schickt – ohne Antwort bleibt der Client fuer
+  // immer im Zustand 'configuration' und erreicht nie 'play'.
+  // scanner.isReady() prueft auf _client.state === 'play', der Bot wirkt also
+  // dauerhaft als "noch nicht eingeloggt", obwohl Login und Profil geklappt haben.
+  // Antwort-Paket ist in der configuration-Phase gueltig (geprueft gegen
+  // minecraft-data 26.1.2: resource_pack_receive ist dort vorhanden).
+  bot.on('resourcePack', () => {
+    try {
+      bot.acceptResourcePack()
+      log.ok('Server-Ressourcenpaket angenommen – Configuration-Phase kann beendet werden.')
+    } catch (err) {
+      log.warn(`Ressourcenpaket konnte nicht angenommen werden: ${err.message}`)
+    }
+  })
+
   const scanner = createScanner(bot, cfg)
   const modServer = createModServer(bot, cfg, scanner)
   attachTriggerListener(bot, cfg, scanner)
