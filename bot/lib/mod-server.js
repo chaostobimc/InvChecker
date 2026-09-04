@@ -90,6 +90,12 @@ function createModServer (bot, cfg, scanner) {
         bot.emit('invchecker:config', msg.patch || {})
         socket.write(JSON.stringify({ type: 'config_ack', ok: true }) + '\n')
         break
+      case 'addpull':
+        bot.emit('invchecker:addpull', msg)
+        break
+      case 'pull':
+        bot.emit('invchecker:pull', msg)
+        break
       default:
         socket.write(JSON.stringify({ type: 'error', error: 'unknown_type', got: msg.type }) + '\n')
     }

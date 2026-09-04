@@ -8,6 +8,7 @@ const { createScanner } = require('./lib/scanner')
 const { createModServer } = require('./lib/mod-server')
 const { attachTriggerListener } = require('./lib/trigger')
 const { attachResourcePackHandler, watchConfigurationPhase } = require('./lib/resource-pack')
+const { attachPullHandler } = require('./lib/pull')
 const { authOptions } = require('./lib/auth')
 
 const CONFIG_FILE = process.env.INVCHECKER_CONFIG || process.argv[2] || path.join(__dirname, 'config.json')
@@ -69,6 +70,9 @@ async function main (configFile = CONFIG_FILE) {
   const scanner = createScanner(bot, cfg)
   const modServer = createModServer(bot, cfg, scanner)
   attachTriggerListener(bot, cfg, scanner)
+  const pull = attachPullHandler(bot, cfg, (obj) => modServer.send(obj))
+  bot.on('invchecker:addpull', (m) => { pull.addPull(Number(m.x), Number(m.y), Number(m.z)).catch((e) => log.error(`addpull: ${e.message}`)) })
+  bot.on('invchecker:pull', () => { pull.pull().catch((e) => log.error(`pull: ${e.message}`)) })
 
   // ------------------------------------------------------- Ergebnis-Ausgabe
   const summaryOf = (result) => {
@@ -133,12 +137,13 @@ async function main (configFile = CONFIG_FILE) {
     process.exit(0)
   })
 
-  log.info('Bereit. Befehle im Terminal:  invsee <Name>   |   quit')
-  if (process.stdin.isTTY && !process.env.INVCHECKER_NO_STDIN) {
+  log.info('Bereit. Terminal: invsee <Name> | addpull <x> <y> <z> | pull | status | quit | alles andere = /<Befehl> ingame')
+  if ((process.stdin.isTTY || process.env.INVCHECKER_FORCE_STDIN) && !process.env.INVCHECKER_NO_STDIN) {
     const readline = require('node:readline')
     const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
     rl.on('line', (line) => {
-      const [cmd, ...rest] = line.trim().split(/\s+/)
+      const raw = line.trim()
+      const [cmd, ...rest] = raw.split(/\s+/)
       const arg = rest.join(' ')
       switch (cmd) {
         case 'invsee':
@@ -148,12 +153,24 @@ async function main (configFile = CONFIG_FILE) {
         case 'status':
           log.info(`bot=${bot.username} online=${!!bot.entity} wartend=${scanner.pendingCount} modClients=${modServer.clientCount} enchants=${bot.invcheckerEnchantNames.size}`)
           break
+        case 'addpull': {
+          const [x, y, z] = arg.split(/\s+/).map(Number)
+          pull.addPull(x, y, z).catch((e) => log.error(`addpull: ${e.message}`))
+          break
+        }
+        case 'pull':
+          pull.pull().catch((e) => log.error(`pull: ${e.message}`))
+          break
         case 'quit':
         case 'exit':
           process.kill(process.pid, 'SIGINT')
           break
         default:
-          if (cmd) log.warn('Unbekannt. Verfügbar: invsee <name>, status, quit')
+          // Alles andere wird 1:1 als Ingame-Befehl ausgeführt: "msg a hi" -> "/msg a hi"
+          if (cmd) {
+            log.info(`→ /${raw}`)
+            try { bot.chat('/' + raw) } catch (err) { log.error(`Befehl fehlgeschlagen: ${err.message}`) }
+          }
       }
     })
   }

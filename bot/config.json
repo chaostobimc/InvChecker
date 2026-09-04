@@ -24,7 +24,8 @@
     "reconnectMaxDelayMs": 30000,
     "keepAlive": true,
     "checkTimeoutInterval": 60000,
-    "resourcePackTimeoutMs": 120000
+    "resourcePackTimeoutMs": 120000,
+    "usePathfinder": true
   },
   "invsee": {
     "_info": "Befehl, den der Bot ausfuehrt. {player} wird durch den Zielnamen ersetzt (ohne / am Anfang schreiben).",
@@ -54,7 +55,8 @@
       "minecraft:gray_stained_glass_pane",
       "minecraft:armor_stand",
       "minecraft:nether_star"
-    ]
+    ],
+    "mergeStacks": true
   },
   "trigger": {
     "_info": "Optional: Der Bot horcht zusaetzlich selbst im Serverchat nach dem Muster. Die Mod-Erkennung (latest.log / Chat-Event) ist immer der schnellste Weg, das hier ist nur ein Backup.",

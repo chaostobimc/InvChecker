@@ -195,6 +195,17 @@ public final class BotConnection {
 		return sent;
 	}
 
+	/** Schickt dem Bot die Position eines Blocks für das addpull-Feature. */
+	public boolean sendAddPull(double x, double y, double z) {
+		return sendRaw("{\"type\":\"addpull\",\"token\":" + jsonString(config.token)
+				+ ",\"x\":" + x + ",\"y\":" + y + ",\"z\":" + z + "}\n");
+	}
+
+	/** Löst beim Bot sofort den Rechtsklick auf den gemerkten Block aus. */
+	public boolean sendPull() {
+		return sendRaw("{\"type\":\"pull\",\"token\":" + jsonString(config.token) + "}\n");
+	}
+
 	private boolean sendRaw(String message) {
 		OutputStream stream = out;
 		if (stream == null) {

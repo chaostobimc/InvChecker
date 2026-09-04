@@ -19,7 +19,8 @@ const DEFAULTS = {
     reconnectMaxDelayMs: 30000,
     keepAlive: true,
     checkTimeoutInterval: 60000,
-    resourcePackTimeoutMs: 120000  // Timeout fuer den Download des Server-Ressourcenpakets
+    resourcePackTimeoutMs: 120000,  // Timeout fuer den Download des Server-Ressourcenpakets
+    usePathfinder: true  // fuer addpull: Bot läuft zum Block (benoetigt mineflayer-pathfinder)
   },
   invsee: {
     command: '/invsee {player}',
@@ -27,6 +28,7 @@ const DEFAULTS = {
     closeWindowAfterScan: true,
     ignoreOwnInventory: true,
     slots: { inventory: [0, 35], armor: [37, 40], offhand: [46, 46] },
+    mergeStacks: true,  // gleiche Items zu einem Stack zusammenfassen (Totem 10x)
     ignoreItems: ['minecraft:barrier']
   },
   trigger: {

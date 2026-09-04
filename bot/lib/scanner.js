@@ -126,6 +126,20 @@ function createScanner (bot, cfg) {
   }
   const isIgnored = (name) => name !== undefined && ignoreSet.has(name)
 
+  // Gleiche Items zu einem Stack zusammenfassen ("Totem 10x" statt 10x "Totem 1x").
+  // Getrennt bleibt, was sich unterscheidet (Custom-Name oder Verzauberung),
+  // damit z.B. zwei verschieden verzauberte Schwerter nicht verschmelzen.
+  function mergeStacks (list) {
+    const map = new Map()
+    for (const it of list) {
+      const key = it.id + '|' + (it.cn || '') + '|' + (it.e || []).join(',')
+      const ex = map.get(key)
+      if (ex) ex.c += it.c
+      else map.set(key, { ...it })
+    }
+    return [...map.values()]
+  }
+
   function readSlots (window) {
     const ranges = invsee.slots
     const items = []
@@ -160,7 +174,8 @@ function createScanner (bot, cfg) {
   function finish (req, window, titleMatched) {
     if (!drop(req)) return
     const readAt = Date.now()
-    const { items, armor, offhand } = readSlots(window)
+    let { items, armor, offhand } = readSlots(window)
+    if (invsee.mergeStacks !== false) items = mergeStacks(items)
     lastScanAt = readAt
 
     const counts = {}

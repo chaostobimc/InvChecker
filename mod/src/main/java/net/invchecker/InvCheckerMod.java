@@ -1,6 +1,8 @@
 package net.invchecker;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
@@ -19,7 +21,9 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.math.BlockPos;
 import org.lwjgl.glfw.GLFW;
 
 /**
@@ -44,6 +48,7 @@ public final class InvCheckerMod implements ClientModInitializer {
 	private static LogTailer logTailer;
 	private static KeyBinding openConfigKey;
 	private static KeyBinding manualScanKey;
+	private static KeyBinding pullKey;
 
 	@Override
 	public void onInitializeClient() {
@@ -73,6 +78,25 @@ public final class InvCheckerMod implements ClientModInitializer {
 		manualScanKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
 				"key.invchecker.manual_scan", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_J, KeyBinding.Category.MISC));
 
+		// V = Rechtsklick des Bots auf den gemerkten Block (addpull).
+		pullKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+				"key.invchecker.pull", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_V, KeyBinding.Category.MISC));
+
+		// Client-Befehl /addpull: Block, den man ansieht, an den Bot schicken.
+		ClientCommandRegistrationCallback.event().register((dispatcher, registryAccess) ->
+				dispatcher.register(ClientCommandManager.literal("addpull").executes(context -> {
+					MinecraftClient c = MinecraftClient.getInstance();
+					if (c != null && c.crosshairTarget instanceof BlockHitResult hit) {
+						BlockPos pos = hit.getBlockPos();
+						boolean sent = connection.sendAddPull(pos.getX(), pos.getY(), pos.getZ());
+						log(sent ? "addpull: Block " + pos.toShortString() + " an den Bot geschickt."
+								: "addpull: keine Verbindung zum Bot.");
+					} else {
+						log("addpull: Du schaust gerade keinen Block an.");
+					}
+					return 1;
+				})));
+
 		ClientTickEvents.END_CLIENT_TICK.register(InvCheckerMod::onClientTick);
 
 		// fabric-api >= 0.141: Die Layer-API (HudLayerRegistrationCallback /
@@ -84,7 +108,7 @@ public final class InvCheckerMod implements ClientModInitializer {
 				(context, tickCounter) -> HudRenderer.render(context, MinecraftClient.getInstance()));
 
 		connection.connectAsync();
-		log("Geladen. Taste K = Einstellungen, J = manueller Scan des Gegners.");
+		log("Geladen. K = Einstellungen, J = manueller Scan, V = Bot-Rechtsklick (addpull), /addpull = Block merken.");
 	}
 
 	private static void onClientTick(MinecraftClient client) {
@@ -93,6 +117,9 @@ public final class InvCheckerMod implements ClientModInitializer {
 		}
 		if (manualScanKey != null && manualScanKey.wasPressed()) {
 			detector.manualTrigger(targetedPlayerName(client));
+		}
+		if (pullKey != null && pullKey.wasPressed()) {
+			connection.sendPull();
 		}
 		scanState.tick(client);
 		connection.tick();

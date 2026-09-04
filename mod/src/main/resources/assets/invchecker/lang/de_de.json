@@ -1,5 +1,6 @@
 {
   "category.invchecker": "InvChecker",
   "key.invchecker.open_config": "InvChecker-Einstellungen öffnen",
-  "key.invchecker.manual_scan": "InvChecker: Gegner jetzt scannen"
+  "key.invchecker.manual_scan": "InvChecker: Gegner jetzt scannen",
+  "key.invchecker.pull": "InvChecker: Bot-Rechtsklick auf gemerkten Block (addpull)"
 }

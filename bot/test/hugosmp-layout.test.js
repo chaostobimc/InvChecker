@@ -54,6 +54,8 @@ function buildRealLayout () {
 
   put(0, 'diamond_sword')
   put(1, 'golden_apple', 62)
+  put(2, 'totem_of_undying')
+  put(3, 'totem_of_undying')
   put(4, 'ender_pearl', 15)
   put(8, 'obsidian', 64)
   put(27, 'rotten_flesh', 62)
@@ -147,6 +149,11 @@ test('hugosmp-Layout: Rüstung 37-40, Offhand 46, Deko gefiltert', async () => {
   assert.ok(!ids.includes('minecraft:barrier'), 'Barriere darf nicht im Inventar sein')
   assert.ok(!ids.includes('minecraft:armor_stand'), 'Rüstungsständer darf nicht im Inventar sein')
   assert.ok(!ids.includes('minecraft:nether_star'), 'Netherstern darf nicht im Inventar sein')
+
+  // Gleiche Items verschmelzen zu einem Stack (Totem 2x statt 2x Totem 1x)
+  const totems = result.items.filter((i) => i.id === 'minecraft:totem_of_undying')
+  assert.strictEqual(totems.length, 1, 'mehrere Totems müssen zu einem Eintrag verschmelzen')
+  assert.strictEqual(totems[0].c, 2, 'die Anzahl muss summiert werden')
 
   try { await instance.shutdown() } catch { /* egal */ }
   try { fake.close() } catch { /* egal */ }
