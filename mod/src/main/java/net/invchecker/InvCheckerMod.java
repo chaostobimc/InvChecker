@@ -83,7 +83,7 @@ public final class InvCheckerMod implements ClientModInitializer {
 				"key.invchecker.pull", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_V, KeyBinding.Category.MISC));
 
 		// Client-Befehl /addpull: Block, den man ansieht, an den Bot schicken.
-		ClientCommandRegistrationCallback.event().register((dispatcher, registryAccess) ->
+		ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) ->
 				dispatcher.register(ClientCommandManager.literal("addpull").executes(context -> {
 					MinecraftClient c = MinecraftClient.getInstance();
 					if (c != null && c.crosshairTarget instanceof BlockHitResult hit) {
